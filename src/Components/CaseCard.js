@@ -8,26 +8,30 @@ import CardActions from '@mui/material/CardActions';
 import { Chip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 
 
 function CaseCard() {
   const [caseStudyData, setCaseStudyData] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     Axios.get('http://localhost:3001/api/getCases').then((response) => {
-      console.log(response.data)
       setCaseStudyData(response.data)
     })
   }, [])
+
+  const handleCardClick = (caseID) => {
+    const selectedCase = caseStudyData.find(data => data.caseID === caseID);
+    navigate(`/details/${caseID}`, { state: { data: selectedCase } })
+  };
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', maxWidth: 'auto', overflowY: 'auto' }}>
       {caseStudyData.map((caseStudy) => (
         <Card key={caseStudy.caseID} sx={{ minWidth: 450, minHeight: 150, maxWidth: 345, margin: '10px' }}>
-          <CardActionArea>
+          <CardActionArea onClick={() => handleCardClick(caseStudy.caseID)}>
             {caseStudy.Image && (
-              <img style={{width:"inherit", height:"inherit"}} src={require(`${caseStudy.Image}`)} alt="logo" />
+              <img style={{ width: "inherit", height: "inherit" }} src={require(`${caseStudy.Image}`)} alt="logo" />
             )}
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
