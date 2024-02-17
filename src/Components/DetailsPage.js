@@ -1,16 +1,23 @@
 import React from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import TopBar from '../TopBar';
+import DetailsContent from './DetailsContent';
 
 export default function DetailsPage() {
-    let { caseID } = useParams(); // Destructure caseID from useParams result
-    console.log(caseID);
 
     const location = useLocation();
     const { data } = location.state || {};
-    
-
+    console.log(data);
     return (
-        <TopBar/>
+        <div>
+            <TopBar />
+            <DetailsContent
+                age={data.PatientAge}
+                sex={data.PatientSex}
+                complaint={data.Complaint}
+                history={data.Background}
+                findings ={data.Findings}
+                image={data.Image}/>
+        </div>
     );
 }
