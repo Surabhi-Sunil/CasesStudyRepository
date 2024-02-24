@@ -2,7 +2,6 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import TopBar from '../TopBar';
 import DetailsContent from './DetailsContent';
-
 export default function DetailsPage() {
 
     const location = useLocation();

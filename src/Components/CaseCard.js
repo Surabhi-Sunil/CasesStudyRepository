@@ -15,7 +15,7 @@ function CaseCard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    Axios.get('http://localhost:3002/api/getCases').then((response) => {
+    Axios.get('http://localhost:3001/api/getCases').then((response) => {
       setCaseStudyData(response.data);
     });
   }, []);
@@ -41,7 +41,6 @@ function CaseCard() {
         style={{ margin: '10px' }}
       />
       <Masonry columns={4} spacing={2}>
-      
         {filteredCaseStudies.map((caseStudy) => (
           <div key={caseStudy.caseID}>
             <Card>
@@ -75,7 +74,6 @@ function CaseCard() {
             </Card>
           </div>
         ))}
-      
       </Masonry>
     </div>
   );
