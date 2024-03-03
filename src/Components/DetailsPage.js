@@ -15,13 +15,14 @@ export default function DetailsPage() {
                 sex={data.PatientSex}
                 complaint={data.Complaint}
                 history={data.Background}
-                findings ={data.Findings}
+                findings={data.Findings}
                 image={data.Image}
                 image2={data.Image2}
                 image3={data.Image3}
                 image4={data.Image4}
                 image5={data.Image5}
-                />
+                Reference={data.reference}
+            />
         </div>
     );
 }
