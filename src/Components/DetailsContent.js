@@ -1,68 +1,124 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
+import { detailsStyles } from './DetailsStyles';
+import pptxgen from 'pptxgenjs';
 
 export default function DetailsPage(props) {
-    const historyPoints = props.history.split('\n');
-    const findingPoints = props.findings.split('\n');
+    const historyPoints = props.history ? props.history.split('\n') : null;
+    const findingPoints = props.findings ? props.findings.split('\n') : null;
+
+    const handleDownloadPPT = () => {
+        const pptx = new pptxgen();
+
+        // Create a new slide
+        const slide = pptx.addSlide();
+
+        // Define vertical position for text elements
+        let yPos = 0.2;
+
+        // Add content to the slide
+        slide.addText('Patient', { x: 0.5, y: yPos, fontSize: 20, bold: true, color: '0088CC' });
+        yPos += 0.3;
+        slide.addText(`${props.age} year old ${props.sex === 'F' ? 'Female' : 'Male'}`, { x: 0.5, y: yPos, fontSize: 14, color: '333333' });
+        yPos += 0.5;
+        slide.addText('Chief Complaint', { x: 0.5, y: yPos, fontSize: 20, bold: true, color: '0088CC' });
+        yPos += 0.4;
+        slide.addText(props.complaint, { x: 0.5, y: yPos, fontSize: 14, color: '333333' });
+
+        // Add patient history points
+        if (historyPoints) {
+            yPos += 0.5;
+            slide.addText('Background and/or Patient history', { x: 0.5, y: yPos, fontSize: 20, bold: true, color: '0088CC' });
+            yPos += 0.3;
+            historyPoints.forEach(point => {
+                slide.addText(point.trim(), { x: 0.5, y: yPos, fontSize: 14, color: '333333' });
+                yPos += 0.3;
+            });
+        }
+
+        // Add findings points
+        if (findingPoints) {
+            yPos += 0.5;
+            slide.addText('Findings', { x: 0.5, y: yPos, fontSize: 20, bold: true, color: '0088CC' });
+            yPos += 0.3;
+            findingPoints.forEach(point => {
+                slide.addText(point.trim(), { x: 0.5, y: yPos, fontSize: 14, color: '333333' });
+                yPos += 0.3;
+            });
+        }
+
+        // Download the PowerPoint presentation
+        pptx.writeFile('PatientDetails.pptx');
+    };
 
     return (
-        <div style={{height:"90%"}}>
-            <div style={{ marginTop: "100px", display: "flex", justifyContent: "center", height: "800px" }}>
-                <div style={{ width: "60%", height:"94%",overflow: "auto", marginRight: "20px", marginLeft: "50px", backgroundColor: "#7A0019", padding: "20px", borderRadius: "10px" }}>
-                    <div style={{ marginBottom: "20px" }}>
-                        <div style={{ backgroundColor: "#FFCC33", borderRadius: "10px" }}>
-                            <Typography variant="h6" style={{ marginLeft: "20px", color: "black", marginBottom: "10px" }}>Patient</Typography>
+        <div style={detailsStyles.maindiv}>
+            <div style={detailsStyles.contentDiv}>
+                <div style={detailsStyles.textDiv}>
+                    <div style = {{height: "97%"}}>
+                    <div style={detailsStyles.sectionDiv}>
+                        <div style={detailsStyles.headingDiv}>
+                            <Typography variant="h6" style={detailsStyles.typography}>Patient</Typography>
                         </div>
-                        <Typography style={{ marginLeft: "20px", color: "#FFFFFF" }}>{props.age} year old {props.sex === 'F' ? 'Female' : 'Male'}</Typography>
+                        <Typography style={detailsStyles.contentTypography}>{props.age} year old {props.sex === 'F' ? 'Female' : props.sex === 'M' ? 'Male' : 'Non-binary'}</Typography>
                     </div>
-                    <div style={{ marginBottom: "20px" }}>
-                        <div style={{ backgroundColor: "#FFCC33", borderRadius: "10px" }}>
-                            <Typography variant="h6" style={{ marginLeft: "20px", color: "black", marginBottom: "10px" }}>Chief Complaint</Typography>
+                    <div style={detailsStyles.sectionDiv}>
+                        <div style={detailsStyles.headingDiv}>
+                            <Typography variant="h6" style={detailsStyles.typography}>Chief Complaint</Typography>
                         </div>
-                        <Typography style={{ marginLeft: "20px", color: "#FFFFFF" }}>{props.complaint}</Typography>
+                        <Typography style={detailsStyles.contentTypography}>{props.complaint}</Typography>
                     </div>
-                    <div style={{ marginBottom: "20px" }}>
-                        <div style={{ backgroundColor: "#FFCC33", borderRadius: "10px" }}>
-                            <Typography variant="h6" style={{ marginLeft: "20px", color: "black", marginBottom: "10px" }}>Background and/or Patient history</Typography>
+                    {historyPoints &&
+                        <div style={detailsStyles.sectionDiv}>
+                            <div style={detailsStyles.headingDiv}>
+                                <Typography variant="h6" style={detailsStyles.typography}>Background and/or Patient history</Typography>
+                            </div>
+                            <Typography component="ul" style={detailsStyles.contentTypography}>
+                                {historyPoints.map((point, index) => (
+                                    <li key={index}>{point.trim()}</li>
+                                ))}
+                            </Typography>
                         </div>
-                        <Typography component="ul" style={{ marginLeft: "20px", color: "#FFFFFF" }}>
-                            {historyPoints.map((point, index) => (
-                                <li key={index}>{point.trim()}</li>
-                            ))}
-                        </Typography>
+                    }
+                    {findingPoints &&
+                        <div style={detailsStyles.sectionDiv}>
+                            <div style={detailsStyles.headingDiv}>
+                                <Typography variant="h6" style={detailsStyles.typography}>Findings</Typography>
+                            </div>
+                            <Typography component="ul" style={detailsStyles.contentTypography}>
+                                {findingPoints.map((point, index) => (
+                                    <li key={index}>{point.trim()}</li>
+                                ))}
+                            </Typography>
+                        </div>
+                    }
                     </div>
-                    <div style={{ marginBottom: "20px" }}>
-                        <div style={{ backgroundColor: "#FFCC33", borderRadius: "10px" }}>
-                            <Typography variant="h6" style={{ marginLeft: "20px", color: "black", marginBottom: "10px" }}>Findings</Typography>
-                        </div>
-                        <Typography component="ul" style={{ marginLeft: "20px", color: "#FFFFFF" }}>
-                            {findingPoints.map((point, index) => (
-                                <li key={index}>{point.trim()}</li>
-                            ))}
-                        </Typography>
+                    
+                    <div style={{height:"3%", textAlign:'right'}}>
+                        <Button style={{ backgroundColor: "#FFCC33", color: "black"}} onClick={handleDownloadPPT}>Download</Button>
                     </div>
                 </div>
-                <div style={{ width: "40%", height:"99%",overflow: "auto", display: "flex", flexDirection: "column", marginRight: "15px" }}>
+                <div style={detailsStyles.imageDiv}>
                     {props.image && (
-                        <img style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "10px" }} src={require(`${props.image}`)} alt="Patient" />
+                        <img style={detailsStyles.image} src={require(`${props.image}`)} alt="Patient" />
                     )}
                     {props.image2 && (
-                        <img style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "10px" }} src={require(`${props.image2}`)} alt="Patient" />
+                        <img style={detailsStyles.image} src={require(`${props.image2}`)} alt="Patient" />
                     )}
                     {props.image3 && (
-                        <img style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "10px" }} src={require(`${props.image3}`)} alt="Patient" />
+                        <img style={detailsStyles.image} src={require(`${props.image3}`)} alt="Patient" />
                     )}
                     {props.image4 && (
-                        <img style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "10px" }} src={require(`${props.image4}`)} alt="Patient" />
+                        <img style={detailsStyles.image} src={require(`${props.image4}`)} alt="Patient" />
                     )}
                     {props.image5 && (
-                        <img style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "10px" }} src={require(`${props.image5}`)} alt="Patient" />
+                        <img style={detailsStyles.image} src={require(`${props.image5}`)} alt="Patient" />
                     )}
                 </div>
 
             </div>
-            <div style={{height:"10%",marginLeft:"50px"}}>
-                <Typography >{props.Reference}</Typography>
+            <div style={detailsStyles.referenceDiv}>
+                <Typography style={{fontSize:"11px"}} >{props.Reference}</Typography>
             </div>
         </div>
     );
